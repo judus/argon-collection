@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Maduser\Argon\Collection;
 
-use BadMethodCallException;
+use Maduser\Argon\Collection\Exceptions\CollectionException;
 
 /**
+ * A sequential list-style collection with integer keys.
+ *
  * @template TValue
  * @extends BaseCollection<int, TValue>
  */
 class ListCollection extends BaseCollection
 {
     /**
-     * @param iterable<TValue> $items
+     * Initializes the list collection with items.
+     *
+     * @api
+     * @param iterable<TValue> $items Items to populate the list.
      */
     public function __construct(iterable $items = [])
     {
@@ -23,24 +28,36 @@ class ListCollection extends BaseCollection
     }
 
     /**
-     * @param TValue $value
+     * @api
+     * @template T as TValue
+     * @psalm-param T $value
+     * @param mixed $value
      */
     public function push(mixed $value): void
     {
+        /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->items[] = $value;
     }
 
     /**
-     * @throws BadMethodCallException
+     * Not supported on list collections.
+     *
+     * @api
+     * @throws CollectionException Always throws an exception.
+     * @psalm-suppress PossiblyUnusedParam
+     * @noinspection PhpUnusedParameterInspection*
      */
     public function put(mixed $key, mixed $value): void
     {
-        throw new BadMethodCallException('ListCollection does not support keys.');
+        throw CollectionException::listDoesNotSupportKeys();
     }
 
     /**
-     * @param int $index
-     * @return TValue|null
+     * Retrieves the value at the given index.
+     *
+     * @api
+     * @param int $index The index to retrieve.
+     * @return TValue|null The value at the given index, or null if not set.
      */
     public function get(int $index): mixed
     {

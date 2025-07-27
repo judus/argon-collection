@@ -7,16 +7,17 @@ namespace Maduser\Argon\Collection;
 use Maduser\Argon\Collection\Traits\TypedEnforcer;
 
 /**
- * @template TValue of object
- * @extends ListCollection<TValue>
+ * @api
+ * @template T of object
+ * @extends ListCollection<T>
  */
 class TypedListCollection extends ListCollection
 {
     use TypedEnforcer;
 
     /**
-     * @param class-string<TValue> $type
-     * @param iterable<TValue> $items
+     * @param class-string<T> $type
+     * @param iterable<T> $items
      *
      * @noinspection PhpMissingParentConstructorInspection
      */
@@ -30,7 +31,7 @@ class TypedListCollection extends ListCollection
     }
 
     /**
-     * @param TValue $value
+     * @param T $value
      */
     public function push(mixed $value): void
     {
@@ -38,4 +39,3 @@ class TypedListCollection extends ListCollection
         parent::push($value);
     }
 }
-

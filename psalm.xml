@@ -24,85 +24,25 @@
     <issueHandlers>
         <DeprecatedMethod errorLevel="error"/>
         <DeprecatedClass errorLevel="error"/>
-        <PossiblyUnusedMethod errorLevel="info">
+        <MissingOverrideAttribute>
             <errorLevel type="suppress">
-                <directory name="tests"/>
+                <directory name="src"/>
             </errorLevel>
-        </PossiblyUnusedMethod>
-        <UnusedBaselineEntry>
+        </MissingOverrideAttribute>
+        <UnsafeInstantiation>
             <errorLevel type="suppress">
-                <directory name="tests"/>
+                <file name="src/Traits/FluentCollectionOps.php"/>
             </errorLevel>
-        </UnusedBaselineEntry>
-        <UnusedClass>
+        </UnsafeInstantiation>
+        <TooManyArguments>
             <errorLevel type="suppress">
-                <directory name="tests"/>
+                <file name="src/Traits/FluentCollectionOps.php"/>
             </errorLevel>
-        </UnusedClass>
-        <UnusedMethod>
+        </TooManyArguments>
+        <UnusedVariable>
             <errorLevel type="suppress">
-                <directory name="tests"/>
+                <file name="src/Traits/FluentCollectionOps.php"/>
             </errorLevel>
-        </UnusedMethod>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </UndefinedClass>
-        <PossiblyUndefinedMethod>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </PossiblyUndefinedMethod>
-        <PropertyNotSetInConstructor>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </PropertyNotSetInConstructor>
-        <InternalMethod>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </InternalMethod>
-        <MixedArgument>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </MixedArgument>
-        <MixedAssignment>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </MixedAssignment>
-        <MixedMethodCall>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </MixedMethodCall>
-        <PossiblyUnusedProperty>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </PossiblyUnusedProperty>
-        <PossiblyUnusedParam>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </PossiblyUnusedParam>
-        <PossiblyUnusedReturnValue>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </PossiblyUnusedReturnValue>
-        <MixedArrayAccess>
-            <errorLevel type="suppress">
-                <directory name="tests"/>
-            </errorLevel>
-        </MixedArrayAccess>
-        <UnusedParam>
-            <errorLevel type="suppress">
-                <directory name="tests/"/>
-            </errorLevel>
-        </UnusedParam>
+        </UnusedVariable>
     </issueHandlers>
 </psalm>

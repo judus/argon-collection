@@ -7,6 +7,7 @@ namespace Maduser\Argon\Collection;
 use Maduser\Argon\Collection\Traits\TypedEnforcer;
 
 /**
+ * @api
  * @template TKey of array-key
  * @template TValue of object
  * @extends MapCollection<TKey, TValue>

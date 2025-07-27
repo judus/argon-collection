@@ -6,8 +6,11 @@ namespace Maduser\Argon\Collection;
 
 use BadMethodCallException;
 use Maduser\Argon\Collection\BaseCollection;
+use Maduser\Argon\Collection\Exceptions\CollectionException;
 
 /**
+ * A key-value collection that preserves map semantics.
+ *
  * @template TKey of array-key
  * @template TValue
  * @extends BaseCollection<TKey, TValue>
@@ -15,7 +18,10 @@ use Maduser\Argon\Collection\BaseCollection;
 class MapCollection extends BaseCollection
 {
     /**
-     * @param iterable<TKey, TValue> $items
+     * Initializes the map collection with key-value pairs.
+     *
+     * @api
+     * @param iterable<TKey, TValue> $items Items to populate the map.
      */
     public function __construct(iterable $items = [])
     {
@@ -25,8 +31,11 @@ class MapCollection extends BaseCollection
     }
 
     /**
-     * @param TKey $key
-     * @param TValue $value
+     * Inserts or updates an item in the map by key.
+     *
+     * @api
+     * @param TKey $key The key to assign the value to.
+     * @param TValue $value The value to store.
      */
     public function put(mixed $key, mixed $value): void
     {
@@ -34,16 +43,23 @@ class MapCollection extends BaseCollection
     }
 
     /**
-     * @throws BadMethodCallException
+     * Not supported on map collections.
+     *
+     * @api
+     * @psalm-suppress PossiblyUnusedParam
+     * @throws BadMethodCallException Always throws an exception.
      */
     public function push(mixed $value): void
     {
-        throw new BadMethodCallException('MapCollection does not support push(). Use put($key, $value).');
+        throw CollectionException::mapDoesNotSupportPush();
     }
 
     /**
-     * @param TKey $key
-     * @return TValue|null
+     * Retrieves the value associated with the given key.
+     *
+     * @api
+     * @param TKey $key The key to look up.
+     * @return TValue|null The value, or null if the key does not exist.
      */
     public function get(mixed $key): mixed
     {

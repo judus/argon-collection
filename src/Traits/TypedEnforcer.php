@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Maduser\Argon\Collection\Traits;
 
+use Maduser\Argon\Collection\Exceptions\CollectionException;
+
 trait TypedEnforcer
 {
     /** @var class-string */
@@ -12,9 +14,7 @@ trait TypedEnforcer
     protected function assertType(mixed $item): void
     {
         if (!($item instanceof $this->type)) {
-            throw new \InvalidArgumentException(
-                "Expected instance of {$this->type}, got " . get_debug_type($item)
-            );
+            throw CollectionException::expectedInstanceOf($this->type, $item);
         }
     }
 }

@@ -17,6 +17,7 @@
         "psr-4": {
             "Tests\\": "tests/",
             "Tests\\Integration\\": "tests/integration/",
+            "Tests\\Unit\\": "tests/unit/",
             "Tests\\Mocks\\": "tests/resources/mocks"
         }
     },
