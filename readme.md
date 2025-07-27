@@ -1,158 +1,103 @@
-# Argon DTO
+[![PHP](https://img.shields.io/badge/php-8.2+-blue)](https://www.php.net/)
+[![Build](https://github.com/judus/argon-collection/actions/workflows/php.yml/badge.svg)](https://github.com/judus/argon-collection/actions)
+[![codecov](https://codecov.io/gh/judus/argon-collection/branch/master/graph/badge.svg)](https://codecov.io/gh/judus/argon-collection)
+[![Psalm Level](https://shepherd.dev/github/judus/argon-collection/coverage.svg)](https://shepherd.dev/github/judus/argon-collection)
+[![Code Style](https://img.shields.io/badge/code%20style-PSR--12-brightgreen.svg)](https://www.php-fig.org/psr/psr-12/)
+[![Latest Version](https://img.shields.io/packagist/v/maduser/argon-collection.svg)](https://packagist.org/packages/maduser/argon-collection)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A base `AbstractDTO` class for creating immutable data transfer objects with support for:
+# Argon Collection
 
-- `fromArray()` and `fromJson()` hydration
-- Recursive `toArray()` and `toJson()` serialization
-- Strict constructor mapping via `AutoMappableInterface`
-- Optional value equality via `equals()`
+A set of generic, type-safe collection classes for PHP.
 
----
+* List-style collections (`ListCollection`, `TypedListCollection`)
+* Map-style collections (`MapCollection`, `TypedMapCollection`)
+* Iterable, countable, and fluent via common collection operations (`map`, `filter`, `reduce`, etc.)
+
+## Requirements
+
+* PHP 8.2+
+* Psalm (recommended for type safety)
 
 ## Installation
 
-Install via Composer:
-
 ```bash
-composer require maduser/argon-dto
-````
+composer require maduser/argon-collection
+```
 
----
+## Usage
 
-## Basic Usage
+### ListCollection
 
 ```php
-use Maduser\Argon\DTO\AbstractDTO;
-use Maduser\Argon\DTO\Contracts\AutoMappableInterface;
+use Maduser\Argon\Collection\ListCollection;
 
-readonly class AddressDTO extends AbstractDTO implements AutoMappableInterface
-{
-    public function __construct(
-        public string $street,
-        public string $zipCode,
-        public string $city
-    ) {}
+$collection = new ListCollection(['a', 'b', 'c']);
 
-    public static function mapFromArray(array $data): array
-    {
-        return [
-            $data['street'] ?? '',
-            $data['zipCode'] ?? '',
-            $data['city'] ?? '',
-        ];
-    }
+$collection->push('d');
+
+foreach ($collection as $item) {
+    echo $item;
 }
 ```
 
-```php
-$data = [
-    'street' => 'Main St. 12',
-    'zipCode' => '12345',
-    'city' => 'Exampletown'
-];
-
-// Hydration
-$dto = AddressDTO::fromArray($data);
-
-// JSON
-$json = $dto->toJson();
-$clone = AddressDTO::fromJson($json);
-
-// Comparison
-$dto->equals($clone); // true
-```
-
----
-
-## Nested DTOs
-
-Nested DTOs are recursively serialized when using `toArray()` or `toJson()`.
+### TypedListCollection
 
 ```php
-readonly class PersonDTO extends AbstractDTO implements AutoMappableInterface
+use Maduser\Argon\Collection\TypedListCollection;
+
+final class UserDto
 {
-    public function __construct(
-        public string $name,
-        public AddressDTO $address
-    ) {}
-
-    public static function mapFromArray(array $data): array
-    {
-        return [
-            $data['name'] ?? '',
-            AddressDTO::fromArray($data['address'] ?? []),
-        ];
-    }
+    public function __construct(public string $name) {}
 }
-```
 
-```php
-$person = PersonDTO::fromArray([
-    'name' => 'Julien',
-    'address' => [
-        'street' => 'Rue de PHP',
-        'zipCode' => '4000',
-        'city' => 'Basel'
-    ]
+$list = new TypedListCollection(UserDto::class, [
+    new UserDto('alice'),
+    new UserDto('bob'),
 ]);
 
-$person->toArray();
-// [
-//   'name' => 'Julien',
-//   'address' => [
-//     'street' => 'Rue de PHP',
-//     'zipCode' => '4000',
-//     'city' => 'Basel'
-//   ]
-// ]
-
-echo $person;
-// JSON string with full nested structure
+$list->push(new UserDto('charlie'));
 ```
 
----
-
-## Custom Serialization
-
-If you need to customize the output format:
+### MapCollection
 
 ```php
-protected function serializeToArray(): array
-{
-    return [
-        'full_address' => "{$this->street}, {$this->zipCode} {$this->city}"
-    ];
-}
+use Maduser\Argon\Collection\MapCollection;
+
+$map = new MapCollection(['one' => 1, 'two' => 2]);
+
+$map->put('three', 3);
+$value = $map->get('two');
 ```
 
----
+### TypedMapCollection
 
-## Interface Overview
+```php
+use Maduser\Argon\Collection\TypedMapCollection;
 
-| Interface               | Purpose                                            |
-| ----------------------- | -------------------------------------------------- |
-| `AutoMappableInterface` | Defines `mapFromArray(array): array` for hydration |
-| `Jsonable`              | Defines `toJson()`                                 |
-| `FromJsonInterface`     | Defines `fromJson(string)`                         |
-| `DTOInterface`          | Marker interface (optional, semantic)              |
+final class ConfigValue
+{
+    public function __construct(public string $key, public string $value) {}
+}
 
----
+$map = new TypedMapCollection(ConfigValue::class, [
+    'db' => new ConfigValue('db', 'mysql'),
+]);
 
-## Error Handling
+$map->put('cache', new ConfigValue('cache', 'redis'));
+```
 
-* `DTOConfigurationException` is thrown if `mapFromArray()` is missing.
-* `SerializationException` wraps any `JsonException` during encoding.
-* `JsonException` is thrown on invalid JSON input.
+## Collection Operations
 
----
+All collections support fluent operations:
 
-## Notes
-
-* DTOs are `readonly` by design and require PHP 8.2+.
-* Keys in `mapFromArray()` must match constructor arguments exactly (by order).
-* Arrays of DTOs are serialized recursively as well.
-
----
+```php
+$filtered = $collection->filter(fn($item) => $item !== 'a');
+$mapped   = $collection->map(fn($item) => strtoupper($item));
+$first    = $collection->first();
+$reduced  = $collection->reduce(fn($carry, $item) => $carry . $item, '');
+```
 
 ## License
-MIT — do what you want.
+
+MIT
